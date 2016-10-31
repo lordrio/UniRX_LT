@@ -12,46 +12,40 @@ public class ItemSelector : MonoBehaviour
     [SerializeField] private int numStock = 100;
     [SerializeField] private int numUse = 0;
 
+    public int NumUse
+    {
+        get { return numUse; }
+
+        set
+        {
+            numUse = value;
+            plusButton.interactable = true;
+            minusButton.interactable = true;
+
+            if (numUse <= 0)
+            {
+                numUse = 0;
+                minusButton.interactable = false;
+            }
+            else if (numUse >= numStock)
+            {
+                numUse = numStock;
+                plusButton.interactable = false;
+            }
+
+            counterTxt.text = numUse.ToString();
+        }
+    }
+
+
     private void Awake()
     {
-        maxButton.onClick.AddListener(All);
-        plusButton.onClick.AddListener(Plus);
-        minusButton.onClick.AddListener(Minus);
+        maxButton.onClick.AddListener(() => NumUse = numStock);
+        plusButton.onClick.AddListener(() => NumUse++);
+        minusButton.onClick.AddListener(() => NumUse--);
         stockTxt.text = "x " + numStock;
         counterTxt.text = numUse.ToString();
         minusButton.interactable = (numUse > 0);
         plusButton.interactable = (numUse < numStock);
-    }
-
-    private void Minus()
-    {
-        if (--numUse <= 0)
-        {
-            numUse = 0;
-            minusButton.interactable = false;
-        }
-
-        plusButton.interactable = true;
-        counterTxt.text = numUse.ToString();
-    }
-
-    private void Plus()
-    {
-        if (++numUse >= numStock)
-        {
-            All();
-            return;
-        }
-
-        minusButton.interactable = true;
-        counterTxt.text = numUse.ToString();
-    }
-
-    private void All()
-    {
-        numUse = numStock;
-        minusButton.interactable = true;
-        plusButton.interactable = false;
-        counterTxt.text = numUse.ToString();
     }
 }
