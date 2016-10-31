@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UniRx;
 
 public class ItemSelector : MonoBehaviour
 {
@@ -16,17 +15,12 @@ public class ItemSelector : MonoBehaviour
     private void Awake()
     {
         maxButton.onClick.AddListener(All);
-        //plusButton.onClick.AddListener(Plus);
+        plusButton.onClick.AddListener(Plus);
         minusButton.onClick.AddListener(Minus);
         stockTxt.text = "x " + numStock;
         counterTxt.text = numUse.ToString();
         minusButton.interactable = (numUse > 0);
         plusButton.interactable = (numUse < numStock);
-
-        plusButton.OnClickAsObservable()
-                  
-                  .Scan(1, (arg1, arg2) => numUse += arg1)
-                  .SubscribeToText(counterTxt);
     }
 
     private void Minus()
