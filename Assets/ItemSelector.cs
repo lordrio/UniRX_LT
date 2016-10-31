@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-
+using UniRx;
 public class ItemSelector : MonoBehaviour
 {
     [SerializeField]private Button maxButton;
@@ -14,44 +14,28 @@ public class ItemSelector : MonoBehaviour
 
     private void Awake()
     {
-        maxButton.onClick.AddListener(All);
-        plusButton.onClick.AddListener(Plus);
-        minusButton.onClick.AddListener(Minus);
         stockTxt.text = "x " + numStock;
         counterTxt.text = numUse.ToString();
         minusButton.interactable = (numUse > 0);
         plusButton.interactable = (numUse < numStock);
-    }
 
-    private void Minus()
-    {
-        if (--numUse <= 0)
-        {
-            numUse = 0;
-            minusButton.interactable = false;
-        }
+        plusButton.OnClickAsObservable()
+                  .Select(_ => numUse + 1)
+                  .Where(arg => arg <= numStock)
+                  .Do(arg => plusButton.interactable = numStock > (numUse = arg)  )
+                  .Do(arg => minusButton.interactable = true )
+                  .SubscribeToText(counterTxt);
 
-        plusButton.interactable = true;
-        counterTxt.text = numUse.ToString();
-    }
+        minusButton.OnClickAsObservable()
+                   .Select(_ => numUse - 1)
+                   .Where(arg => arg >= 0)
+                   .Do(arg => minusButton.interactable = 0 < (numUse = arg))
+                   .Do(arg => plusButton.interactable = true)
+                   .SubscribeToText(counterTxt);
 
-    private void Plus()
-    {
-        if (++numUse >= numStock)
-        {
-            All();
-            return;
-        }
-
-        minusButton.interactable = true;
-        counterTxt.text = numUse.ToString();
-    }
-
-    private void All()
-    {
-        numUse = numStock;
-        minusButton.interactable = true;
-        plusButton.interactable = false;
-        counterTxt.text = numUse.ToString();
+        maxButton.OnClickAsObservable()
+                 .Do(_ => minusButton.interactable = !(plusButton.interactable = false))
+                 .Select(_ => numUse = numStock)
+                 .SubscribeToText(counterTxt);
     }
 }
