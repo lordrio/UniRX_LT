@@ -22,12 +22,34 @@ public class ItemSelector : MonoBehaviour
         plusButton.onClick.AddListener(Plus);
         minusButton.onClick.AddListener(Minus);
         slider.onValueChanged.AddListener(OnSliderUpdate);
+        counterTxt.onEndEdit.AddListener(OnEndEdit);
         stockTxt.text = "x " + max;
 
         slider.maxValue = max;
         slider.minValue = min;
         UpdateView();
     }
+
+    private void OnEndEdit(string input)
+    {
+        int num = count;
+        int.TryParse(input,out num);
+
+        if (num <= min)
+        {
+            Min();
+            return;
+        }
+        else if (num >= max)
+        {
+            Max();
+            return;
+        }
+
+        count = num;
+        UpdateView();
+    }
+
 
     private void OnSliderUpdate(float arg)
     {
