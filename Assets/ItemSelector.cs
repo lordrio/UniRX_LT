@@ -28,11 +28,9 @@ public class ItemSelector : MonoBehaviour
         numUse.SubscribeToText(counterTxt);
 
         plusButton.OnClickAsObservable()
-                  .Where(_ => numUse.Value + 1 <= numStock.Value)
                   .Subscribe(_ => numUse.Value++);
         
         minusButton.OnClickAsObservable()
-                   .Where(_ => numUse.Value >= 0)
                    .Subscribe(_ => numUse.Value--);
 
         maxButton.OnClickAsObservable()
