@@ -21,10 +21,49 @@ public class ItemSelector : MonoBehaviour
         maxButton.onClick.AddListener(Max);
         plusButton.onClick.AddListener(Plus);
         minusButton.onClick.AddListener(Minus);
+        slider.onValueChanged.AddListener(OnSliderUpdate);
+        counterTxt.onEndEdit.AddListener(OnEndEdit);
         stockTxt.text = "x " + max;
-        counterTxt.text = count.ToString();
+
+        slider.maxValue = max;
+        slider.minValue = min;
+        UpdateView();
+    }
+
+    private void OnEndEdit(string input)
+    {
+        int num = count;
+        int.TryParse(input,out num);
+
+        if (num <= min)
+        {
+            Min();
+            return;
+        }
+        else if (num >= max)
+        {
+            Max();
+            return;
+        }
+
+        count = num;
+        UpdateView();
+    }
+
+
+    private void OnSliderUpdate(float arg)
+    {
+        count = (int)slider.value;
+        UpdateView();
+    }
+
+    private void UpdateView()
+    { 
         minusButton.interactable = (count > min);
         plusButton.interactable = (count < max);
+        counterTxt.textComponent.color = (count >= 0) ? Color.black : Color.red;
+        counterTxt.text = count.ToString();
+        slider.value = count;
     }
 
     private void Minus()
@@ -35,8 +74,7 @@ public class ItemSelector : MonoBehaviour
             return;
         }
 
-        plusButton.interactable = true;
-        counterTxt.text = count.ToString();
+        UpdateView();
     }
 
     private void Plus()
@@ -47,24 +85,19 @@ public class ItemSelector : MonoBehaviour
             return;
         }
 
-        minusButton.interactable = true;
-        counterTxt.text = count.ToString();
+        UpdateView();
     }
 
     private void Max()
     {
         count = max;
-        minusButton.interactable = true;
-        plusButton.interactable = false;
-        counterTxt.text = count.ToString();
+        UpdateView();
     }
 
     private void Min()
     {
         count = min;
-        minusButton.interactable = false;
-        plusButton.interactable = true;
-        counterTxt.text = count.ToString();
+        UpdateView();
     }
 
 }
