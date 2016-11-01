@@ -4,54 +4,67 @@ using UnityEngine.UI;
 public class ItemSelector : MonoBehaviour
 {
     [SerializeField]private Button maxButton;
+    [SerializeField]private Button minButton;
     [SerializeField]private Button plusButton;
     [SerializeField]private Button minusButton;
     [SerializeField]private Text stockTxt;
-    [SerializeField]private Text counterTxt;
+    [SerializeField]private InputField counterTxt;
+    [SerializeField]private Slider slider;
 
-    [SerializeField] private int numStock = 100;
-    [SerializeField] private int numUse = 0;
+    [SerializeField] private int max = 5;
+    [SerializeField] private int min = -5;
+    [SerializeField] private int count = 0;
 
     private void Awake()
     {
-        maxButton.onClick.AddListener(All);
+        minButton.onClick.AddListener(Min);
+        maxButton.onClick.AddListener(Max);
         plusButton.onClick.AddListener(Plus);
         minusButton.onClick.AddListener(Minus);
-        stockTxt.text = "x " + numStock;
-        counterTxt.text = numUse.ToString();
-        minusButton.interactable = (numUse > 0);
-        plusButton.interactable = (numUse < numStock);
+        stockTxt.text = "x " + max;
+        counterTxt.text = count.ToString();
+        minusButton.interactable = (count > min);
+        plusButton.interactable = (count < max);
     }
 
     private void Minus()
     {
-        if (--numUse <= 0)
+        if (--count <= min)
         {
-            numUse = 0;
-            minusButton.interactable = false;
+            Min();
+            return;
         }
 
         plusButton.interactable = true;
-        counterTxt.text = numUse.ToString();
+        counterTxt.text = count.ToString();
     }
 
     private void Plus()
     {
-        if (++numUse >= numStock)
+        if (++count >= max)
         {
-            All();
+            Max();
             return;
         }
 
         minusButton.interactable = true;
-        counterTxt.text = numUse.ToString();
+        counterTxt.text = count.ToString();
     }
 
-    private void All()
+    private void Max()
     {
-        numUse = numStock;
+        count = max;
         minusButton.interactable = true;
         plusButton.interactable = false;
-        counterTxt.text = numUse.ToString();
+        counterTxt.text = count.ToString();
     }
+
+    private void Min()
+    {
+        count = min;
+        minusButton.interactable = false;
+        plusButton.interactable = true;
+        counterTxt.text = count.ToString();
+    }
+
 }
