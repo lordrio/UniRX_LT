@@ -25,6 +25,17 @@ public class ItemSelector : MonoBehaviour
                   plusButton.interactable = !obj.Item2;
               });
 
+        // 違うやり方
+        /*var checker = numUse.Select((arg) => Tuple.Create(arg > 0, arg < numStock.Value)).ToReactiveProperty();
+
+        checker.Select((arg) => arg.Item1)
+               .DistinctUntilChanged()
+               .SubscribeToInteractable(minusButton);
+
+        checker.Select((arg) => arg.Item2)
+               .DistinctUntilChanged()
+               .SubscribeToInteractable(plusButton);*/
+
         numUse.SubscribeToText(counterTxt);
 
         plusButton.OnClickAsObservable()
