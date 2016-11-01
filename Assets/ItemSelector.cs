@@ -46,11 +46,11 @@ public class ItemSelector : MonoBehaviour
 
         // プラス、チェックは入りません（ちゃんとinteractableでボタンを押せないになってます）
         plusButton.OnClickAsObservable()
-                  .Subscribe(_ => numUse.Value++);
+                  .Subscribe(_ => ++numUse.Value);
 
         // マイナス、チェックは入りません（ちゃんとinteractableでボタンを押せないになってます）
         minusButton.OnClickAsObservable()
-                   .Subscribe(_ => numUse.Value--);
+                   .Subscribe(_ => --numUse.Value);
 
         // マックス
         maxButton.OnClickAsObservable()
